@@ -29,13 +29,18 @@ class Upload(models.Model):
     comment = models.CharField(
         max_length=150, verbose_name="Комментарий к документу", help_text="Comment for doc", **NULLABLE
     )
+
     filename = models.CharField(
         max_length=150, verbose_name="Имя файла", help_text="File name", **NULLABLE
     )
+
+    file = models.FileField(upload_to='upload'
+    )
+
     hash_file = models.CharField(
         max_length=150, verbose_name="Хэш файла", help_text="File hash", **NULLABLE
     )
-    state_file = models.SmallIntegerField(max_length=512, choices=State.choices, default=State.awaiting)
+    state_file = models.SmallIntegerField( choices=State.choices, default=State.awaiting)
 
     created_time = models.DateTimeField(verbose_name="Время создания", auto_now=True)
 
