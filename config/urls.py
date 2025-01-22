@@ -18,9 +18,9 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("favicon.ico", RedirectView.as_view(url="/static/img/favicon.ico")),
     path("users/", include("users.urls", namespace="users")),
+    path("docs/", include("docs.urls", namespace="docs")),  # маршрут к приложению Привычки
 ]

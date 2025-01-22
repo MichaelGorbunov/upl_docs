@@ -45,7 +45,7 @@ class Upload(models.Model):
     created_time = models.DateTimeField(verbose_name="Время создания", auto_now=True)
 
     def __str__(self):
-        return self.filename
+        return self.file.name
 
     class Meta:
         verbose_name = "Документ"
