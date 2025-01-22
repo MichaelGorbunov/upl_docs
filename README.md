@@ -54,6 +54,24 @@ DRF
 
 Операции с пользователями
 
+GET http://localhost:8000/users/users/ список
+GET http://localhost:8000/users/users/1/ детали
+PATCH http://localhost:8000/users/users/1/ обновление
+{
+    "id": 1,
+    "last_login": "2025-01-22T04:55:27.670515Z",
+    "is_superuser": true,
+    "username": "SuperUser",
+    "is_staff": true,
+    "date_joined": "2025-01-22T04:54:39.989224Z",
+    "first_name": "SUser1",
+    "last_name": "ADMIN",
+    "email": "admin@webstore.ru",
+    "is_active": true,
+    "groups": [],
+    "user_permissions": []
+}
+
 //create
 
 //update
