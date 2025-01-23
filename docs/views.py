@@ -5,6 +5,7 @@ from rest_framework.generics import (CreateAPIView,
 
 from docs.models import Upload
 from docs.serializers import DocsSerializer
+from docs.services import print_message
 
 
 class DocsListAPIView(ListAPIView):
@@ -25,7 +26,9 @@ class DocsCreateAPIView(CreateAPIView):
         """Автоматическая запись пользователя в атрибут owner """
         docs = serializer.save()
         docs.owner = self.request.user
+        print_message()
         docs.save()
+
 
 class DocsDestroyAPIView(DestroyAPIView):
     """Контроллер удаления одного документа"""
