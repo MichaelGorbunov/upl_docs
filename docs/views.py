@@ -6,16 +6,29 @@ from rest_framework.generics import (CreateAPIView,
 from docs.models import Upload
 from docs.serializers import DocsSerializer
 from docs.services import send_message
+from docs.permissions import IsOwner,IsOwnerOrSuperUser
 
+from rest_framework.permissions import IsAuthenticated
 
 
 
 class DocsListAPIView(ListAPIView):
     """Контроллер вывода списка документов"""
 
-    queryset = Upload.objects.all()
+    # queryset = Upload.objects.all()
     serializer_class = DocsSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        # Получите пользователя из запроса
+        user = self.request.user
+
+        # Если пользователь суперпользователь, возвращаем все документы
+        if user.is_superuser:
+            return Upload.objects.all()
+
+        # В противном случае, возвращаем только документы владельца
+        return Upload.objects.filter(owner=user)
 
 
 class DocsCreateAPIView(CreateAPIView):
@@ -37,4 +50,5 @@ class DocsDestroyAPIView(DestroyAPIView):
 
     serializer_class = DocsSerializer
     queryset = Upload.objects.all()
-    # permission_classes = (IsOwner,)
+    # permission_classes = [IsAuthenticated,]
+    permission_classes = [IsOwner]
