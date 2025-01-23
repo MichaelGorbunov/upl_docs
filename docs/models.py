@@ -8,6 +8,7 @@ NULLABLE = {"blank": True, "null": True}
 
 class Upload(models.Model):
     class State(models.IntegerChoices):
+        '''класс для выбора состояния документа'''
         rejected = 0, 'Документ отклонен'
         adopted = 1, 'Документ принят'
         awaiting = 2, 'Докумен на проверке'
@@ -35,17 +36,26 @@ class Upload(models.Model):
     )
 
     file = models.FileField(upload_to='upload'
-    )
+                            )
 
     hash_file = models.CharField(
         max_length=150, verbose_name="Хэш файла", help_text="File hash", **NULLABLE
     )
-    state_file = models.SmallIntegerField( choices=State.choices, default=State.awaiting)
+    state_file = models.SmallIntegerField(choices=State.choices, default=State.awaiting)
 
     created_time = models.DateTimeField(verbose_name="Время создания", auto_now=True)
 
     def __str__(self):
+        '''string for docs record'''
         return self.file.name
+
+    def delete(self, *args, **kwargs):
+        '''delete docs record'''
+        # До удаления записи получаем необходимую информацию
+        storage, path = self.file.storage, self.file.path
+        # удаляем сам файл storage.delete(path)
+        storage.delete(path)
+        super(Upload, self).delete(*args, **kwargs)
 
     class Meta:
         verbose_name = "Документ"

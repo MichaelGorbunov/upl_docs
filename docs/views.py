@@ -1,6 +1,6 @@
 # from django.shortcuts import render
 from rest_framework.generics import (CreateAPIView,
-                                     ListAPIView,
+                                     ListAPIView,DestroyAPIView
                                      )
 
 from docs.models import Upload
@@ -27,3 +27,9 @@ class DocsCreateAPIView(CreateAPIView):
         docs.owner = self.request.user
         docs.save()
 
+class DocsDestroyAPIView(DestroyAPIView):
+    """Контроллер удаления одного документа"""
+
+    serializer_class = DocsSerializer
+    queryset = Upload.objects.all()
+    # permission_classes = (IsOwner,)
