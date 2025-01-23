@@ -7,6 +7,7 @@ from docs.models import Upload
 admin.site.site_header = "Панель администрирования"
 admin.site.index_title = "Обработка загруженных документов"
 
+#отключение удаления документов на панели
 admin.site.disable_action('delete_selected')
 
 @admin.action(description="Отклонить документы")
