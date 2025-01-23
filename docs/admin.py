@@ -1,5 +1,7 @@
 from django.contrib import admin
 from docs.models import Upload
+from docs.services import send_message
+import os
 
 # from django_filters import FilterSet
 # admin.site.register(Upload)
@@ -32,6 +34,14 @@ class DocsAdmin(admin.ModelAdmin):
 
     def file_info(self, file_nm: Upload.file):
         return f"Файл {file_nm} "
+
+    def save_model(self, request, obj, form, change):
+        # Внесите нужные изменения в объект перед сохранением
+        file_name=os.path.basename(obj.file.name)
+        chat_id_owner = obj.owner.tg_chat_id
+        email_owner = obj.owner.email
+        send_message(message=f"Уважаемый {email_owner }Изменен документ {file_name} ",chat_id=chat_id_owner)
+        super().save_model(request, obj, form, change)
 
 # class DocsAdminFilter(admin.SimpleListFilter):
 #     title = 'Статус документа'

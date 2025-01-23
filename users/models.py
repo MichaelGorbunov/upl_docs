@@ -17,6 +17,13 @@ class CustomUser(AbstractUser):
 
     is_active = models.BooleanField(default=True)
 
+    tg_chat_id = models.CharField(
+        max_length=50,
+        verbose_name="TG чат ID",
+        help_text="Укажите чат ID в Telegram",
+        **NULLABLE
+    )
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
