@@ -40,7 +40,8 @@ class DocsAdmin(admin.ModelAdmin):
         file_name=os.path.basename(obj.file.name)
         chat_id_owner = obj.owner.tg_chat_id
         email_owner = obj.owner.email
-        send_message(message=f"Уважаемый {email_owner }Изменен документ {file_name} ",chat_id=chat_id_owner)
+        message_from_user=f"Уважаемый {email_owner }Изменен документ {file_name}.Его статус {obj.get_state_file_display()} "
+        send_message(message=message_from_user,chat_id=chat_id_owner)
         super().save_model(request, obj, form, change)
 
 # class DocsAdminFilter(admin.SimpleListFilter):
