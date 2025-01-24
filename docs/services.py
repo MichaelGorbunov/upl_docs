@@ -1,8 +1,13 @@
 import requests
 from dotenv import load_dotenv
 from config import settings
-load_dotenv()
 import os
+from docs.models import Upload
+
+load_dotenv()
+
+
+
 
 admin_tg_chat = os.getenv("TELEGRAM_ADMIN_CHAT")
 tg_bot_url = os.getenv("TELEGRAM_BOT_URL")
