@@ -10,6 +10,11 @@ from .models import CustomUser
 # from .serializer import CustomUserDetailSerializer, CustomUserSerializer
 # from .views import CustomUserViewSet
 
+from django.core.management import call_command
+from django.test import TestCase
+from django.contrib.auth.models import User
+from io import StringIO
+
 
 class IsAccountOwnerTestCase(APITestCase):
     def setUp(self):
@@ -69,3 +74,20 @@ class IsAccountOwnerTestCase(APITestCase):
         )
 
         self.assertFalse(is_permitted, "Неаутентифицированный пользователь не должен иметь доступ.")
+
+
+
+
+
+class CreateUserCommandTest(TestCase):
+
+    def test_create_user_command(self):
+        # Перенаправляем вывод команды в строковый буфер
+
+        call_command('csu')
+
+        # Проверяем, что пользователь был создан
+        user = CustomUser.objects.filter(username='SuperUser').first()
+        self.assertIsNotNone(user)
+        self.assertTrue(user.check_password('123456789'))  # Проверяем правильность пароля
+
