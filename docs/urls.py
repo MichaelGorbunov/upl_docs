@@ -11,7 +11,7 @@ urlpatterns = [
     #создание документа
     path("create/", DocsCreateAPIView.as_view(), name="docs-create"),
     # удаление одного документа
-    path("<int:pk>/delete/", DocsDestroyAPIView.as_view(), name="docs-delete"),
+    path("delete/<int:pk>/", DocsDestroyAPIView.as_view(), name="docs-delete"),
     #скачивание файла
     path('download/<int:pk>/', FileDownloadView.as_view(), name='file-download'),
 
