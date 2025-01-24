@@ -170,14 +170,10 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_SSL = True
-# EMAIL_USE_SSL = False
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_SERVER = EMAIL_HOST_USER
-# EMAIL_ADMIN = EMAIL_HOST_USER
-# RECIPIENTS_EMAIL = os.getenv('RECIPIENTS_EMAIL').split(",")
 # # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # #выводим в консоль
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # # на почту
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "mail")
+ADMIN_EMAIL=os.getenv('ADMIN_EMAIL')

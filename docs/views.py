@@ -6,6 +6,7 @@ from rest_framework.generics import (CreateAPIView,
 from docs.models import Upload
 from docs.serializers import DocsSerializer
 from docs.services import send_message
+from docs.tasks import send_email_to_admin
 from docs.permissions import IsOwner,IsOwnerOrSuperUser
 
 from rest_framework.permissions import IsAuthenticated
@@ -42,6 +43,7 @@ class DocsCreateAPIView(CreateAPIView):
         docs = serializer.save()
         docs.owner = self.request.user
         send_message(f"Загружен новый документ {docs.file} ")
+        send_email_to_admin(message=f"Загружен новый документ {docs.file} ")
         docs.save()
 
 

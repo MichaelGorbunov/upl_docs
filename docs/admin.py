@@ -1,6 +1,7 @@
 from django.contrib import admin
 from docs.models import Upload
 from docs.services import send_message
+from docs.tasks import send_email_to_user
 import os
 
 # from django_filters import FilterSet
@@ -42,6 +43,7 @@ class DocsAdmin(admin.ModelAdmin):
         email_owner = obj.owner.email
         message_from_user=f"Уважаемый {email_owner }Изменен документ {file_name}.Его статус {obj.get_state_file_display()} "
         send_message(message=message_from_user,chat_id=chat_id_owner)
+        send_email_to_user(message_from_user,email_owner)
         super().save_model(request, obj, form, change)
 
 # class DocsAdminFilter(admin.SimpleListFilter):
