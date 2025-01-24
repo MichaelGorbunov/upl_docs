@@ -1,7 +1,7 @@
 from django.urls import path
 
 from docs.apps import DocsConfig
-from docs.views import (DocsCreateAPIView,DocsListAPIView,DocsDestroyAPIView)
+from docs.views import (DocsCreateAPIView, DocsListAPIView, DocsDestroyAPIView, FileDownloadView)
 
 app_name = DocsConfig.name
 
@@ -12,5 +12,7 @@ urlpatterns = [
     path("create/", DocsCreateAPIView.as_view(), name="docs-create"),
     # удаление одного документа
     path("<int:pk>/delete/", DocsDestroyAPIView.as_view(), name="docs-delete"),
+    #скачивание файла
+    path('download/<int:pk>/', FileDownloadView.as_view(), name='file-download'),
 
 ]
