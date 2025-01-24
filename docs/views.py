@@ -38,6 +38,7 @@ class DocsCreateAPIView(CreateAPIView):
 
     serializer_class = DocsSerializer
     queryset = Upload.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         """Автоматическая запись пользователя в атрибут owner """
