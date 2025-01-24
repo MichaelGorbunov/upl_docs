@@ -162,3 +162,22 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=15),
 }
+
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# необходимо в настройках аккаунта яндекс, проставить галочки во вкладке "почтовые программы"
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_SSL = True
+# EMAIL_USE_SSL = False
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_SERVER = EMAIL_HOST_USER
+# EMAIL_ADMIN = EMAIL_HOST_USER
+# RECIPIENTS_EMAIL = os.getenv('RECIPIENTS_EMAIL').split(",")
+# # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# #выводим в консоль
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# # на почту
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "mail")
