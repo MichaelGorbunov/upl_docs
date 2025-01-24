@@ -22,7 +22,7 @@ def send_email_to_admin(message):
     """Функция отправки сообщения загрузке документа."""
 
     send_mail(
-        subject="Обновление статуса загруженного документа ",
+        subject="Загружен новый документ",
         message=message,
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[settings.ADMIN_EMAIL],
