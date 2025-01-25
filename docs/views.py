@@ -40,6 +40,8 @@ class DocsCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
+        if 'file' not in request.FILES:
+            return Response({"error": "В запросе нет файла"}, status=status.HTTP_400_BAD_REQUEST)
         serializer = UploadSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
