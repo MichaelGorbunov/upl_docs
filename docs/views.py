@@ -1,18 +1,17 @@
 # from django.shortcuts import render
 from rest_framework.generics import (CreateAPIView,
-                                     ListAPIView,DestroyAPIView,RetrieveAPIView
+                                     ListAPIView, DestroyAPIView, RetrieveAPIView,
                                      )
-
+from django.http import Http404, HttpResponse
 from docs.models import Upload
 from docs.serializers import DocsSerializer
 from docs.services import send_message
 from docs.tasks import send_email_to_admin
-from docs.permissions import IsOwner,IsOwnerOrSuperUser
+from docs.permissions import IsOwner, IsOwnerOrSuperUser
 from rest_framework.response import Response
-
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from django.http import HttpResponse
 
 class DocsListAPIView(ListAPIView):
     """Контроллер вывода списка документов"""
@@ -46,7 +45,7 @@ class DocsCreateAPIView(CreateAPIView):
         docs.owner = self.request.user
         send_message(f"Загружен новый документ {docs.file} ")
         send_email_to_admin(message=f"Загружен новый документ {docs.file} ")
-        docs.save()
+        # docs.save()
 
 
 class DocsDestroyAPIView(DestroyAPIView):
@@ -58,22 +57,21 @@ class DocsDestroyAPIView(DestroyAPIView):
     permission_classes = [IsOwner]
 
 
-class FileDownloadView(RetrieveAPIView):
-    queryset = Upload.objects.all()
-    serializer_class = DocsSerializer
+class FileDownloadView(APIView):
     permission_classes = [IsOwnerOrSuperUser]
 
     def get(self, request, *args, **kwargs):
-        # file_instance = self.get_object()
-        # file_path = file_instance.file.path
-        #
-        # with open(file_path, 'rb') as file:
-        #     response = Response(file.read())
-        #     response['Content-Disposition'] = f'attachment; filename={file_instance.file.name}'
-        #     return response
+        try:
+            # Получаем объект файла
+            file_instance = Upload.objects.get(pk=kwargs['pk'])
+        except Upload.DoesNotExist:
+            raise Http404("File not found")
 
-        file_instance = self.get_object()
-        # response = HttpResponse(file_instance.file, content_type='application/force-download')
-        response = HttpResponse(file_instance.file, content_type='application/force-download')
-        response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
+        # Используем оригинальное имя файла для скачивания
+        original_filename = file_instance.original_filename or file_instance.file.name
+
+        # Создаем ответ для скачивания файла
+        response = HttpResponse(file_instance.file, content_type='application/octet-stream')
+        # response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
+        response['Content-Disposition'] = f'attachment; filename="{original_filename}"'
         return response
