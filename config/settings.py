@@ -192,3 +192,4 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = False
 ALLOWED_FILE_TYPES = ['text/plain', 'image/jpeg', 'image/png', 'application/pdf']  # Добавьте нужные форматы
+MAX_UPLOAD_SIZE = 5 * 1024 * 1024  # Максимальный размер загрузки (пример 5 МБ)
