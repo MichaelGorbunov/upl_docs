@@ -18,6 +18,7 @@ class UploadSerializer(ModelSerializer):
     class Meta:
         model = Upload
         fields = "__all__"  # Укажите все нужные поля
+        read_only_fields = ['owner', 'original_filename', 'hash_file']
 
     def validate_file(self, value):
         """Проверяем файл перед сохранением."""

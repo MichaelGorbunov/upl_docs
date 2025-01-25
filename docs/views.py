@@ -1,4 +1,8 @@
 # from django.shortcuts import render
+import hashlib
+from datetime import datetime
+import os
+from django.core.files.base import ContentFile
 from rest_framework.generics import (CreateAPIView,
                                      ListAPIView, DestroyAPIView, RetrieveAPIView,
                                      )
@@ -12,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
+
 
 class DocsListAPIView(ListAPIView):
     """Контроллер вывода списка документов"""
@@ -36,25 +41,49 @@ class DocsCreateAPIView(CreateAPIView):
     """Контроллер создания нового документа"""
 
     serializer_class = UploadSerializer
-    queryset = Upload.objects.all()
+    # queryset = Upload.objects.all()
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         if 'file' not in request.FILES:
             return Response({"error": "В запросе нет файла"}, status=status.HTTP_400_BAD_REQUEST)
         serializer = UploadSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            uploaded_file = serializer.validated_data['file']
+            original_filename = uploaded_file.name
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            hash_file = self.calculate_md5(uploaded_file)
+
+            # Измените имя файла, добавив временную метку
+            new_file_name = f"{timestamp}_{uploaded_file.name}"
+            new_file = ContentFile(uploaded_file.read(), name=new_file_name)
+
+            # Создание экземпляра модели UploadedFile
+            uploaded_instance = Upload(
+                owner=request.user,  # Устанавливаем владельца на текущего пользователя
+                # original_filename=uploaded_file.name,
+                original_filename=original_filename,
+                # name=new_file_name,
+                hash_file=hash_file,
+                file=new_file  # файл будет сохранен автоматически
+            )
+            uploaded_instance.save()
+            send_message(f"Загружен новый документ {original_filename} ")
+            send_email_to_admin.delay(f"Загружен файл {original_filename} ")
+
+            return Response({"original_name": uploaded_file.name, "new_name": new_file_name},
+                            status=status.HTTP_201_CREATED)
+            # return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def perform_create(self, serializer):
-        """Автоматическая запись пользователя в атрибут owner """
-        docs = serializer.save()
-        docs.owner = self.request.user
-        send_message(f"Загружен новый документ {docs.file} ")
-        send_email_to_admin.delay(message=f"Загружен новый документ {docs.file} ")
-        # docs.save()
+    def calculate_md5(self, file):
+        """Вычисляет MD5-хэш для файла."""
+        hash_md5 = hashlib.md5()
+        # Считываем файл по частям
+        for chunk in file.chunks():  # Используем метод chunks для считывания файла
+            hash_md5.update(chunk)
+
+        return hash_md5.hexdigest()
 
 
 class DocsDestroyAPIView(DestroyAPIView):

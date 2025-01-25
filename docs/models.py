@@ -1,8 +1,8 @@
 from config import settings
-import os
+# import os
 from django.db import models
-from datetime import datetime
-import hashlib
+# from datetime import datetime
+# import hashlib
 
 # Create your models here.
 NULLABLE = {"blank": True, "null": True}
@@ -59,32 +59,32 @@ class Upload(models.Model):
         storage.delete(path)
         super(Upload, self).delete(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        # Сохраняем имя файла, если файл был загружен
-        if self.file:
-            self.hash_file = self.calculate_md5(self.file)
-            # Получаем оригинальное имя файла до его переименования
-            original_name = self.file.name
-            # Получаем текущее время в нужном формате
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            # Получаем имя файла без расширения
-            base_name, extension = os.path.splitext(original_name)
-            # Формируем новое имя файла с меткой времени
-            new_filename = f"{timestamp}{extension}"
-            # Сохраняем оригинальное имя файла
-            self.original_filename = original_name
-            # Устанавливаем новое имя файла
-            self.file.name = new_filename
-        super(Upload, self).save(*args, **kwargs)
-
-    def calculate_md5(self, file):
-        """Вычисляет MD5-хэш для файла."""
-        hash_md5 = hashlib.md5()
-        # Считываем файл по частям
-        for chunk in file.chunks():  # Используем метод chunks для считывания файла
-            hash_md5.update(chunk)
-
-        return hash_md5.hexdigest()
+    # def save(self, *args, **kwargs):
+    #     # Сохраняем имя файла, если файл был загружен
+    #     if self.file:
+    #         self.hash_file = self.calculate_md5(self.file)
+    #         # Получаем оригинальное имя файла до его переименования
+    #         original_name = self.file.name
+    #         # Получаем текущее время в нужном формате
+    #         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    #         # Получаем имя файла без расширения
+    #         base_name, extension = os.path.splitext(original_name)
+    #         # Формируем новое имя файла с меткой времени
+    #         new_filename = f"{timestamp}{extension}"
+    #         # Сохраняем оригинальное имя файла
+    #         self.original_filename = original_name
+    #         # Устанавливаем новое имя файла
+    #         self.file.name = new_filename
+    #     super(Upload, self).save(*args, **kwargs)
+    #
+    # def calculate_md5(self, file):
+    #     """Вычисляет MD5-хэш для файла."""
+    #     hash_md5 = hashlib.md5()
+    #     # Считываем файл по частям
+    #     for chunk in file.chunks():  # Используем метод chunks для считывания файла
+    #         hash_md5.update(chunk)
+    #
+    #     return hash_md5.hexdigest()
 
 
     class Meta:

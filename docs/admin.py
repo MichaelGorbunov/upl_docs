@@ -10,8 +10,9 @@ import os
 admin.site.site_header = "Панель администрирования"
 admin.site.index_title = "Обработка загруженных документов"
 
-#отключение удаления документов на панели
+# отключение удаления документов на панели
 admin.site.disable_action('delete_selected')
+
 
 @admin.action(description="Отклонить документы")
 def rejected_docs(self, request, queryset):
@@ -27,7 +28,7 @@ def adopted_docs(self, request, queryset):
 
 @admin.register(Upload)
 class DocsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'file_info', 'comment', 'state_file')
+    list_display = ('id', 'file_info', 'comment', 'state_file', 'original_filename')
     list_display_links = ('id', 'file_info', 'comment')
     list_filter = ['state_file']
     ordering = ['-created_time', 'state_file']
@@ -38,12 +39,13 @@ class DocsAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         # Внесите нужные изменения в объект перед сохранением
-        file_name=os.path.basename(obj.file.name)
+        file_name = os.path.basename(obj.file.name)
         chat_id_owner = obj.owner.tg_chat_id
         email_owner = obj.owner.email
-        message_from_user=f"Уважаемый {email_owner }Изменен документ {file_name}.Его статус {obj.get_state_file_display()} "
-        send_message(message=message_from_user,chat_id=chat_id_owner)
-        send_email_to_user(message_from_user,email_owner)
+        original_filename = obj.original_filename
+        message_from_user = f"Уважаемый {email_owner} . Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
+        send_message(message=message_from_user, chat_id=chat_id_owner)
+        send_email_to_user.delay(message_from_user, email_owner)
         super().save_model(request, obj, form, change)
 
 # class DocsAdminFilter(admin.SimpleListFilter):
