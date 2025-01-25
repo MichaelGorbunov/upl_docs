@@ -53,7 +53,7 @@ class DocsCreateAPIView(CreateAPIView):
         docs = serializer.save()
         docs.owner = self.request.user
         send_message(f"Загружен новый документ {docs.file} ")
-        send_email_to_admin(message=f"Загружен новый документ {docs.file} ")
+        send_email_to_admin.delay(message=f"Загружен новый документ {docs.file} ")
         # docs.save()
 
 

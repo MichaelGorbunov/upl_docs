@@ -7,7 +7,7 @@ from docs.models import Upload
 
 
 
-# @shared_task
+@shared_task
 def send_email_to_user(message,email):
     """Функция отправки сообщения об обновлении документа."""
 
@@ -18,6 +18,7 @@ def send_email_to_user(message,email):
         recipient_list=[email],
     )
 
+@shared_task
 def send_email_to_admin(message):
     """Функция отправки сообщения загрузке документа."""
 
