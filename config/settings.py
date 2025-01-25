@@ -191,3 +191,4 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
+ALLOWED_FILE_TYPES = ['text/plain', 'image/jpeg', 'image/png', 'application/pdf']  # Добавьте нужные форматы

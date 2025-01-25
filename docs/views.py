@@ -4,14 +4,14 @@ from rest_framework.generics import (CreateAPIView,
                                      )
 from django.http import Http404, HttpResponse
 from docs.models import Upload
-from docs.serializers import DocsSerializer
+from docs.serializers import DocsSerializer, UploadSerializer
 from docs.services import send_message
 from docs.tasks import send_email_to_admin
 from docs.permissions import IsOwner, IsOwnerOrSuperUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import status
 
 class DocsListAPIView(ListAPIView):
     """Контроллер вывода списка документов"""
@@ -35,9 +35,16 @@ class DocsListAPIView(ListAPIView):
 class DocsCreateAPIView(CreateAPIView):
     """Контроллер создания нового документа"""
 
-    serializer_class = DocsSerializer
+    serializer_class = UploadSerializer
     queryset = Upload.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = UploadSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         """Автоматическая запись пользователя в атрибут owner """
