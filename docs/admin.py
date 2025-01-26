@@ -46,8 +46,9 @@ class DocsAdmin(admin.ModelAdmin):
         email_owner = obj.owner.email
         original_filename = obj.original_filename
         message_from_user = f"Уважаемый {email_owner}. Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
-
-        send_message(message=message_from_user, chat_id=chat_id_owner)
+        # telegramm
+        # send_message(message=message_from_user, chat_id=chat_id_owner)
+        # email
         send_email_to_user.delay(message_from_user, email_owner)
         # try:
         #     send_message(message=message_from_user, chat_id=chat_id_owner)
