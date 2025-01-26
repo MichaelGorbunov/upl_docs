@@ -30,7 +30,7 @@ services:
   app:
     build: .
     image: ${DOCKER_HUB_USER}/cw_drf-app:latest
-    container_name: habits-app
+    container_name: docs-serv-app
     tty: true
 #    ports:
 #      - 8765:8765
