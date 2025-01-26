@@ -49,7 +49,8 @@ class Upload(models.Model):
     hash_file = models.CharField(
         max_length=32, verbose_name="Хэш файла", help_text="File hash", **NULLABLE
     )
-    state_file = models.SmallIntegerField(choices=State.choices, default=State.awaiting)
+    state_file = models.SmallIntegerField(verbose_name="Состояние документа", help_text="Состояние документа",
+                                          choices=State.choices, default=State.awaiting)
 
     created_time = models.DateTimeField(verbose_name="Время создания", auto_now=True)
 
