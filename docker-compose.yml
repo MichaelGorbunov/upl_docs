@@ -1,0 +1,76 @@
+services:
+
+
+  db:
+    image: postgres:16-alpine
+    container_name: database-server
+    restart: on-failure
+#    env_file:
+#      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGERS_HOST: ${POSTGRES_HOST}
+#      POSTGRES_PORT: ${POSTGRES_PORT}
+    expose:
+      - :"5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "-c", "pg_isready -U $POSTGRES_USER"]
+#      interval: 10s
+#      retries: 5
+#      timeout: 5s
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  app:
+    build: .
+    image: ${DOCKER_HUB_USER}/cw_drf-app:latest
+    container_name: habits-app
+    tty: true
+#    ports:
+#      - 8765:8765
+    expose:
+      - :"8765"
+    command: sh -c "python3 manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8765"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+  redis:
+    image: redis:latest
+    container_name: redis-server
+    restart: on-failure
+  celery:
+    build: .
+    image: ${DOCKER_HUB_USER}/cw_drf-celery:latest
+    container_name: celery-server
+    tty: true
+    command: sh -c "celery -A config worker -l INFO & celery -A config beat -l INFO"
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - app
+      - db
+  nginx:
+    container_name: nginx-proxy-server
+    build: ./nginx
+    image: ${DOCKER_HUB_USER}/cw_drf-nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - app
+    volumes:
+      - ./static:/mysite/static
+
+volumes:
+  pg_data:
+
+
