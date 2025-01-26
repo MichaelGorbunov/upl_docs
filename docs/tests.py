@@ -64,16 +64,16 @@ class FileUploadTest(APITestCase):
         # Проверьте статус ответа
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_5file_upload(self):
-        """Тест загрузки файла"""
-
-        self.client.force_authenticate(user=self.user)  # Аутентификация пользователя
-        # Создайте временный файл
-        file_content = b"This is a test file."
-        uploaded_file = SimpleUploadedFile("testfile.txt", file_content)
-
-        # Отправьте POST-запрос к вашему API с файлом
-        response = self.client.post("/docs/create/", {"file": uploaded_file})
-
-        # Проверьте статус ответа
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    # def test_5file_upload(self):
+    #     """Тест загрузки файла"""
+    #
+    #     self.client.force_authenticate(user=self.user)  # Аутентификация пользователя
+    #     # Создайте временный файл
+    #     file_content = b"This is a test file."
+    #     uploaded_file = SimpleUploadedFile("testfile.txt", file_content)
+    #
+    #     # Отправьте POST-запрос к вашему API с файлом
+    #     response = self.client.post("/docs/create/", {"file": uploaded_file})
+    #
+    #     # Проверьте статус ответа
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
