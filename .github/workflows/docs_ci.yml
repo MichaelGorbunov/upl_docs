@@ -85,5 +85,5 @@ jobs:
           POSTGRES_PASSWORD: some_password
         run:
           coverage run --source='.' manage.py test
-          coverage report
+#          coverage report
 #          python3 manage.py test -v3
