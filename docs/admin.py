@@ -38,8 +38,8 @@ def adopted_docs(modeladmin, request, queryset):
 
 @admin.register(Upload)
 class DocsAdmin(admin.ModelAdmin):
-    list_display = ("id", "file_info", "comment", "state_file", "original_filename")
-    list_display_links = ("id", "file_info", "comment")
+    list_display = ("id",  "comment", "state_file", "original_filename")
+    list_display_links = ("id", "original_filename", "comment")
     list_filter = ["state_file"]
     ordering = ["-created_time", "state_file"]
     actions = [rejected_docs, adopted_docs]
@@ -59,8 +59,8 @@ class DocsAdmin(admin.ModelAdmin):
         # except Exception as e:
         #     modeladmin.message_user(request, f"Ошибка отправки сообщения {email_owner}: {str(e)}", level='error')
 
-    def file_info(self, obj: Upload):
-        return f"Файл {obj.original_filename}"
+    # def file_info(self, obj: Upload):
+    #     return f"Файл {obj.original_filename}"
 
     def save_model(self, request, obj, form, change):
         self.send_notification(obj)  # Вызов в методе save_model
