@@ -19,6 +19,7 @@ class FileUploadTest(APITestCase):
         self.uploaded_file = Upload.objects.create(
             owner=self.user,
             # file="mail/test.txt",
+            original_filename=uploaded_file.name,
             file=uploaded_file,
         )
 
