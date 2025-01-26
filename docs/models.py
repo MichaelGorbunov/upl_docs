@@ -3,6 +3,7 @@ from config import settings
 from django.db import models
 # from datetime import datetime
 # import hashlib
+from docs.services import send_message
 
 # Create your models here.
 NULLABLE = {"blank": True, "null": True}
@@ -59,7 +60,17 @@ class Upload(models.Model):
         storage.delete(path)
         super(Upload, self).delete(*args, **kwargs)
 
-
+    # def save(self, *args, **kwargs):
+    #     send_message(f"тест save")
+    #     super(Upload, self).save(*args, **kwargs)
+    #
+    # def create(self, *args, **kwargs):
+    #     send_message(f"тест create")
+    #     super(Upload, self).save(*args, **kwargs)
+    #
+    # def update(self, *args, **kwargs):
+    #     send_message(f"тест update")
+    #     super(Upload, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Документ"
