@@ -103,11 +103,11 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
 
 
-#      - name: Run bash script via ssh
-#        env:
-#          SOME_DIR: ${{ secrets.SOME_DIR }}
-#        run: |
-#          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "ls $SOME_DIR"
+      - name: Run bash script via ssh
+        env:
+          SOME_DIR: ${{ secrets.SOME_DIR }}
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "ls $SOME_DIR"
 
 
 
