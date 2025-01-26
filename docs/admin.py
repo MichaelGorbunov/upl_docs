@@ -13,33 +13,24 @@ admin.site.index_title = "Обработка загруженных докуме
 # отключение удаления документов на панели
 admin.site.disable_action('delete_selected')
 
-
 @admin.action(description="Отклонить документы")
-def rejected_docs(self, request, queryset):
+def rejected_docs(modeladmin, request, queryset):
+    count = 0
+    queryset.update(state_file=0)
     for obj in queryset:
-        status = obj.id
-        chat_id_owner = obj.owner.tg_chat_id
-        # self.message_user(request, f" {status} ")
-        original_filename = obj.original_filename
-        email_owner = obj.owner.email
-        message_from_user = f"Уважаемый {email_owner} . Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
-        send_message(message=message_from_user, chat_id=chat_id_owner)
-    count = queryset.update(state_file=0)
-    self.message_user(request, f"Изменено {count} записи(ей).")
+        modeladmin.send_notification(obj)  # Вызов метода send_notification из класса DocsAdmin
+        count += 1
+    modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
 
 
 @admin.action(description="Принять документы")
-def adopted_docs(self, request, queryset):
+def adopted_docs(modeladmin, request, queryset):
+    count = 0
+    queryset.update(state_file=1)
     for obj in queryset:
-        status = obj.id
-        chat_id_owner = obj.owner.tg_chat_id
-        # self.message_user(request, f" {status} ")
-        original_filename = obj.original_filename
-        email_owner = obj.owner.email
-        message_from_user = f"Уважаемый {email_owner} . Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
-        send_message(message=message_from_user, chat_id=chat_id_owner)
-    count = queryset.update(state_file=1)
-    self.message_user(request, f"Изменено {count} записи(ей).")
+        modeladmin.send_notification(obj)  # Вызов метода send_notification из класса DocsAdmin
+        count += 1
+    modeladmin.message_user(request, f"Принято {count} записи(ей).")
 
 
 @admin.register(Upload)
@@ -50,30 +41,22 @@ class DocsAdmin(admin.ModelAdmin):
     ordering = ['-created_time', 'state_file']
     actions = [rejected_docs, adopted_docs]
 
-    def file_info(self, file_nm: Upload.file):
-        return f"Файл {file_nm} "
-
-    def save_model(self, request, obj, form, change):
-        # Внесите нужные изменения в объект перед сохранением
-        file_name = os.path.basename(obj.file.name)
+    def send_notification(self, obj):
         chat_id_owner = obj.owner.tg_chat_id
         email_owner = obj.owner.email
         original_filename = obj.original_filename
-        message_from_user = f"Уважаемый {email_owner} . Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
+        message_from_user = f"Уважаемый {email_owner}. Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
+
         send_message(message=message_from_user, chat_id=chat_id_owner)
         send_email_to_user.delay(message_from_user, email_owner)
-        super().save_model(request, obj, form, change)
+        # try:
+        #     send_message(message=message_from_user, chat_id=chat_id_owner)
+        # except Exception as e:
+        #     modeladmin.message_user(request, f"Ошибка отправки сообщения {email_owner}: {str(e)}", level='error')
 
-# class DocsAdminFilter(admin.SimpleListFilter):
-#     title = 'Статус документа'
-#     parameter_name = 'state_file'
-#
-#     def lookups(self, request, ModelAdmin):
-#         return [
-#             (0, 'Отклонен'),
-#             (1, 'Принят'),
-#             (2, 'На рассмотрении'),
-#         ]
-#
-#     def queryset(self, request, queryset):
-#         return queryset
+    def file_info(self, obj: Upload):
+        return f"Файл {obj.original_filename}"
+
+    def save_model(self, request, obj, form, change):
+        self.send_notification(obj)  # Вызов в методе save_model
+        super().save_model(request, obj, form, change)
