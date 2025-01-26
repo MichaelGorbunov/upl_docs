@@ -68,7 +68,8 @@ class DocsCreateAPIView(CreateAPIView):
                 file=new_file  # файл будет сохранен автоматически
             )
             uploaded_instance.save()
-            send_message(f"Загружен новый документ {original_filename} ")
+            # телеграмм
+            # send_message(f"Загружен новый документ {original_filename} ")
             send_email_to_admin.delay(f"Загружен файл {original_filename} ")
 
             return Response({"original_name": uploaded_file.name, "new_name": new_file_name},
