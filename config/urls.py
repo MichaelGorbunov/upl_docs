@@ -40,6 +40,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('', RedirectView.as_view(url='/admin/', permanent=False)),
     path("favicon.ico", RedirectView.as_view(url="/static/img/favicon.ico")),
     path("users/", include("users.urls", namespace="users")),
     path(
