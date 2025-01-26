@@ -15,6 +15,7 @@ class DocsSerializer(ModelSerializer):
     class Meta:
         model = Upload
         fields = "__all__"
+        read_only_fields = ["owner", "original_filename", "hash_file"]
 
 
 class UploadSerializer(ModelSerializer):
