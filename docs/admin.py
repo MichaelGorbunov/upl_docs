@@ -1,8 +1,5 @@
 from django.contrib import admin
-
 from docs.models import Upload
-
-# from docs.services import send_message
 from docs.tasks import send_email_to_user
 
 admin.site.site_header = "Панель администрирования"
@@ -17,7 +14,7 @@ def rejected_docs(modeladmin, request, queryset):
     count = 0
     queryset.update(state_file=0)
     for obj in queryset:
-        modeladmin.send_notification(
+        send_notification(
             obj
         )  # Вызов метода send_notification из класса DocsAdmin
         count += 1
@@ -29,7 +26,7 @@ def adopted_docs(modeladmin, request, queryset):
     count = 0
     queryset.update(state_file=1)
     for obj in queryset:
-        modeladmin.send_notification(
+        send_notification(
             obj
         )  # Вызов метода send_notification из класса DocsAdmin
         count += 1
@@ -38,30 +35,22 @@ def adopted_docs(modeladmin, request, queryset):
 
 @admin.register(Upload)
 class DocsAdmin(admin.ModelAdmin):
-    list_display = ("id",  "comment", "state_file", "original_filename")
+    list_display = ("id", "original_filename", "state_file", "comment")
     list_display_links = ("id", "original_filename", "comment")
     list_filter = ["state_file"]
     ordering = ["-created_time", "state_file"]
     actions = [rejected_docs, adopted_docs]
 
-    def send_notification(self, obj):
-        # chat_id_owner = obj.owner.tg_chat_id
-        email_owner = obj.owner.email
-        original_filename = obj.original_filename
-        message_from_user = (f"Уважаемый {email_owner}. Изменен документ {original_filename}."
-                             f" Его статус: {obj.get_state_file_display()} ")
-        # telegramm
-        # send_message(message=message_from_user, chat_id=chat_id_owner)
-        # email
+
+def send_notification(obj):
+    email_owner = obj.owner.email
+    original_filename = obj.original_filename
+    message_from_user = (f"Уважаемый {email_owner}. Изменен документ {original_filename}."
+                         f" Его статус: {obj.get_state_file_display()} ")
+
+    try:
         send_email_to_user.delay(message_from_user, email_owner)
-        # try:
-        #     send_message(message=message_from_user, chat_id=chat_id_owner)
-        # except Exception as e:
-        #     modeladmin.message_user(request, f"Ошибка отправки сообщения {email_owner}: {str(e)}", level='error')
-
-    # def file_info(self, obj: Upload):
-    #     return f"Файл {obj.original_filename}"
-
-    def save_model(self, request, obj, form, change):
-        self.send_notification(obj)  # Вызов в методе save_model
-        super().save_model(request, obj, form, change)
+    except Exception as e:
+        # Обработка ошибки
+        print(f"Ошибка при отправке уведомления для {original_filename} ({email_owner}): {str(e)}")
+        raise
