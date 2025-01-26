@@ -15,21 +15,79 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Upload',
+            name="Upload",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.CharField(blank=True, help_text='Comment for doc', max_length=150, null=True, verbose_name='Комментарий к документу')),
-                ('filename', models.CharField(blank=True, help_text='File name', max_length=150, null=True, verbose_name='Имя файла')),
-                ('file', models.FileField(upload_to='upload')),
-                ('hash_file', models.CharField(blank=True, help_text='File hash', max_length=150, null=True, verbose_name='Хэш файла')),
-                ('state_file', models.SmallIntegerField(choices=[(0, 'Документ отклонен'), (1, 'Документ принят'), (2, 'Докумен на проверке')], default=2)),
-                ('created_time', models.DateTimeField(auto_now=True, verbose_name='Время создания')),
-                ('owner', models.ForeignKey(blank=True, help_text='укажите владельца', null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='Владелец')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.CharField(
+                        blank=True,
+                        help_text="Comment for doc",
+                        max_length=150,
+                        null=True,
+                        verbose_name="Комментарий к документу",
+                    ),
+                ),
+                (
+                    "filename",
+                    models.CharField(
+                        blank=True,
+                        help_text="File name",
+                        max_length=150,
+                        null=True,
+                        verbose_name="Имя файла",
+                    ),
+                ),
+                ("file", models.FileField(upload_to="upload")),
+                (
+                    "hash_file",
+                    models.CharField(
+                        blank=True,
+                        help_text="File hash",
+                        max_length=150,
+                        null=True,
+                        verbose_name="Хэш файла",
+                    ),
+                ),
+                (
+                    "state_file",
+                    models.SmallIntegerField(
+                        choices=[
+                            (0, "Документ отклонен"),
+                            (1, "Документ принят"),
+                            (2, "Докумен на проверке"),
+                        ],
+                        default=2,
+                    ),
+                ),
+                (
+                    "created_time",
+                    models.DateTimeField(auto_now=True, verbose_name="Время создания"),
+                ),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="укажите владельца",
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Владелец",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Документ',
-                'verbose_name_plural': 'Документы',
-                'ordering': ['created_time'],
+                "verbose_name": "Документ",
+                "verbose_name_plural": "Документы",
+                "ordering": ["created_time"],
             },
         ),
     ]

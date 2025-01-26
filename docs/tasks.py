@@ -1,14 +1,10 @@
 from celery import shared_task
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
-
 from config import settings
-from docs.models import Upload
-
 
 
 @shared_task
-def send_email_to_user(message,email):
+def send_email_to_user(message, email):
     """Функция отправки сообщения об обновлении документа."""
 
     send_mail(
@@ -17,6 +13,7 @@ def send_email_to_user(message,email):
         from_email=settings.EMAIL_HOST_USER,
         recipient_list=[email],
     )
+
 
 @shared_task
 def send_email_to_admin(message):

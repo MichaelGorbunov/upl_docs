@@ -1,21 +1,24 @@
 # from django.shortcuts import render
 import hashlib
 from datetime import datetime
-import os
+
 from django.core.files.base import ContentFile
-from rest_framework.generics import (CreateAPIView,
-                                     ListAPIView, DestroyAPIView, RetrieveAPIView,
-                                     )
 from django.http import Http404, HttpResponse
-from docs.models import Upload
-from docs.serializers import DocsSerializer, UploadSerializer
-from docs.services import send_message
-from docs.tasks import send_email_to_admin
-from docs.permissions import IsOwner, IsOwnerOrSuperUser
+from rest_framework import status
+from rest_framework.generics import (
+    CreateAPIView,
+    DestroyAPIView,
+    ListAPIView,
+)
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
+
+from docs.models import Upload
+from docs.permissions import IsOwner, IsOwnerOrSuperUser
+from docs.serializers import DocsSerializer, UploadSerializer
+# from docs.services import send_message
+from docs.tasks import send_email_to_admin
 
 
 class DocsListAPIView(ListAPIView):
@@ -45,13 +48,15 @@ class DocsCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        if 'file' not in request.FILES:
-            return Response({"error": "В запросе нет файла"}, status=status.HTTP_400_BAD_REQUEST)
+        if "file" not in request.FILES:
+            return Response(
+                {"error": "В запросе нет файла"}, status=status.HTTP_400_BAD_REQUEST
+            )
         serializer = UploadSerializer(data=request.data)
         if serializer.is_valid():
-            uploaded_file = serializer.validated_data['file']
+            uploaded_file = serializer.validated_data["file"]
             original_filename = uploaded_file.name
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             hash_file = self.calculate_md5(uploaded_file)
 
             # Измените имя файла, добавив временную метку
@@ -65,15 +70,17 @@ class DocsCreateAPIView(CreateAPIView):
                 original_filename=original_filename,
                 # name=new_file_name,
                 hash_file=hash_file,
-                file=new_file  # файл будет сохранен автоматически
+                file=new_file,  # файл будет сохранен автоматически
             )
             uploaded_instance.save()
             # телеграмм
             # send_message(f"Загружен новый документ {original_filename} ")
             send_email_to_admin.delay(f"Загружен файл {original_filename} ")
 
-            return Response({"original_name": uploaded_file.name, "new_name": new_file_name},
-                            status=status.HTTP_201_CREATED)
+            return Response(
+                {"original_name": uploaded_file.name, "new_name": new_file_name},
+                status=status.HTTP_201_CREATED,
+            )
             # return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -102,7 +109,7 @@ class FileDownloadView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             # Получаем объект файла
-            file_instance = Upload.objects.get(pk=kwargs['pk'])
+            file_instance = Upload.objects.get(pk=kwargs["pk"])
         except Upload.DoesNotExist:
             raise Http404("File not found")
 
@@ -110,7 +117,9 @@ class FileDownloadView(APIView):
         original_filename = file_instance.original_filename or file_instance.file.name
 
         # Создаем ответ для скачивания файла
-        response = HttpResponse(file_instance.file, content_type='application/octet-stream')
+        response = HttpResponse(
+            file_instance.file, content_type="application/octet-stream"
+        )
         # response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
-        response['Content-Disposition'] = f'attachment; filename="{original_filename}"'
+        response["Content-Disposition"] = f'attachment; filename="{original_filename}"'
         return response

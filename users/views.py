@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
 from users.models import CustomUser
 from users.permissions import IsAccountOwner
 from users.serializer import CustomUserDetailSerializer, CustomUserSerializer
@@ -12,6 +13,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     - Создавать пользователей (доступно для всех).
     - Получать и изменять только свои собственные данные (требуется аутентификация).
     """
+
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer  # Базовый сериализатор
     permission_classes = [IsAuthenticated]  # Общие разрешения по умолчанию

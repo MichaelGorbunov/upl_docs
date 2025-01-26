@@ -20,6 +20,9 @@ django-celery-beat = "^2.7.0"
 django-cors-headers = "^4.6.0"
 drf-yasg = "^1.21.8"
 redis = "^5.2.1"
+flake8 = "^7.1.1"
+isort = "^5.13.2"
+black = "^24.10.0"
 
 
 [build-system]

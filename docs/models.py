@@ -1,9 +1,11 @@
-from config import settings
 # import os
 from django.db import models
+
+from config import settings
+
 # from datetime import datetime
 # import hashlib
-from docs.services import send_message
+# from docs.services import send_message
 
 # Create your models here.
 NULLABLE = {"blank": True, "null": True}
@@ -11,10 +13,11 @@ NULLABLE = {"blank": True, "null": True}
 
 class Upload(models.Model):
     class State(models.IntegerChoices):
-        '''класс для выбора состояния документа'''
-        rejected = 0, 'Документ отклонен'
-        adopted = 1, 'Документ принят'
-        awaiting = 2, 'Докумен на проверке'
+        """класс для выбора состояния документа"""
+
+        rejected = 0, "Документ отклонен"
+        adopted = 1, "Документ принят"
+        awaiting = 2, "Докумен на проверке"
 
     # STATE_CHOICES = [
     #     (0, 'Документ отклонен'),
@@ -31,15 +34,17 @@ class Upload(models.Model):
         help_text="укажите владельца",
     )
     comment = models.CharField(
-        max_length=150, verbose_name="Комментарий к документу", help_text="Comment for doc", **NULLABLE
+        max_length=150,
+        verbose_name="Комментарий к документу",
+        help_text="Comment for doc",
+        **NULLABLE,
     )
 
     original_filename = models.CharField(
         max_length=150, verbose_name="Имя файла", help_text="File name", **NULLABLE
     )
 
-    file = models.FileField(upload_to='upload'
-                            )
+    file = models.FileField(upload_to="upload")
 
     hash_file = models.CharField(
         max_length=32, verbose_name="Хэш файла", help_text="File hash", **NULLABLE
@@ -49,11 +54,11 @@ class Upload(models.Model):
     created_time = models.DateTimeField(verbose_name="Время создания", auto_now=True)
 
     def __str__(self):
-        '''string for docs record'''
+        """string for docs record"""
         return self.file.name
 
     def delete(self, *args, **kwargs):
-        '''delete docs record'''
+        """delete docs record"""
         # До удаления записи получаем необходимую информацию
         storage, path = self.file.storage, self.file.path
         if storage.exists(path):
