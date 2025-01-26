@@ -134,6 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 ENV_TYPE = os.getenv("ENV_TYPE")
 
+STATIC_URL = "static/"
 if ENV_TYPE == 'local':
 
     STATICFILES_DIRS = [
