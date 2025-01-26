@@ -62,6 +62,7 @@ jobs:
 
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install coverage 
           echo "$POSTGRES_USER"
 
       - name: Run migrations
@@ -83,4 +84,6 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: some_password
         run:
-          python3 manage.py test -v3
+          coverage run --source='.' manage.py test
+          coverage report
+#          python3 manage.py test -v3
