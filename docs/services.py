@@ -2,7 +2,7 @@ import requests
 from dotenv import load_dotenv
 from config import settings
 import os
-from docs.models import Upload
+# from docs.models import Upload
 
 load_dotenv()
 
