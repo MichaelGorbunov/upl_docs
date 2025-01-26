@@ -56,8 +56,11 @@ class Upload(models.Model):
         '''delete docs record'''
         # До удаления записи получаем необходимую информацию
         storage, path = self.file.storage, self.file.path
-        # удаляем сам файл storage.delete(path)
-        storage.delete(path)
+        if storage.exists(path):
+            # Удаляем файл
+            storage.delete(path)
+        else:
+            print(f"Файл {path} не найден. Не удалось удалить его.")
         super(Upload, self).delete(*args, **kwargs)
 
     # def save(self, *args, **kwargs):
