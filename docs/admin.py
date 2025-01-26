@@ -16,12 +16,28 @@ admin.site.disable_action('delete_selected')
 
 @admin.action(description="Отклонить документы")
 def rejected_docs(self, request, queryset):
+    for obj in queryset:
+        status = obj.id
+        chat_id_owner = obj.owner.tg_chat_id
+        # self.message_user(request, f" {status} ")
+        original_filename = obj.original_filename
+        email_owner = obj.owner.email
+        message_from_user = f"Уважаемый {email_owner} . Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
+        send_message(message=message_from_user, chat_id=chat_id_owner)
     count = queryset.update(state_file=0)
     self.message_user(request, f"Изменено {count} записи(ей).")
 
 
 @admin.action(description="Принять документы")
 def adopted_docs(self, request, queryset):
+    for obj in queryset:
+        status = obj.id
+        chat_id_owner = obj.owner.tg_chat_id
+        # self.message_user(request, f" {status} ")
+        original_filename = obj.original_filename
+        email_owner = obj.owner.email
+        message_from_user = f"Уважаемый {email_owner} . Изменен документ {original_filename}. Его статус: {obj.get_state_file_display()} "
+        send_message(message=message_from_user, chat_id=chat_id_owner)
     count = queryset.update(state_file=1)
     self.message_user(request, f"Изменено {count} записи(ей).")
 
