@@ -14,11 +14,12 @@ class FileUploadTest(APITestCase):
         self.other_user = CustomUser.objects.create_user(
             username="other_user", email="2@test.com", password="password123"
         )
-
+        file_content = b"This is a test file."
+        uploaded_file = SimpleUploadedFile("testfile.txt", file_content)
         self.uploaded_file = Upload.objects.create(
             owner=self.user,
-            file="dummy/path/test.txt",
-            # Укажите реальный путь к файлу на диске (для теста вы можете использовать заглушку)
+            # file="mail/test.txt",
+            file=uploaded_file,
         )
 
         # Выводим ID загруженного файла для отладки
