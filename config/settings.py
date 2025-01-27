@@ -29,7 +29,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -181,9 +182,9 @@ EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_SSL = True
 # # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # #выводим в консоль
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# # на почту
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# на почту
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "mail")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 
