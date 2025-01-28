@@ -47,69 +47,69 @@ class DocsCreateAPIView(CreateAPIView):
     serializer_class = UploadSerializer
     queryset = Upload.objects.all()
     permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        # Получаем загруженный файл
-        uploaded_file = self.request.FILES['uploaded_file']
-
-        # Сохраняем оригинальное имя файла
-        original_file_name = uploaded_file.name
-
-        # Добавляем дату и время к имени файла
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        _, ext = os.path.splitext(uploaded_file.name)
-        new_file_name = f"{timestamp}{ext}"
-        # new_file_name = f"{self.request.data['title']}_{timestamp}{ext}"
-
-        # Вычисляем MD5 хеш
-        hash_file = self.calculate_md5(uploaded_file)
-
-        # Создаем экземпляр модели
-        serializer.save(
-            owner=self.request.user,
-            original_file_name=original_file_name,
-            file=new_file_name,
-            hash_file=hash_file
+# тоже не работает
+    # def perform_create(self, serializer):
+    #     # Получаем загруженный файл
+    #     uploaded_file = self.request.FILES['uploaded_file']
+    #
+    #     # Сохраняем оригинальное имя файла
+    #     original_file_name = uploaded_file.name
+    #
+    #     # Добавляем дату и время к имени файла
+    #     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    #     _, ext = os.path.splitext(uploaded_file.name)
+    #     new_file_name = f"{timestamp}{ext}"
+    #     # new_file_name = f"{self.request.data['title']}_{timestamp}{ext}"
+    #
+    #     # Вычисляем MD5 хеш
+    #     hash_file = self.calculate_md5(uploaded_file)
+    #
+    #     # Создаем экземпляр модели
+    #     serializer.save(
+    #         owner=self.request.user,
+    #         original_file_name=original_file_name,
+    #         file=new_file_name,
+    #         hash_file=hash_file
         )
 # пустые файлы
-    # def post(self, request):
-    #     if "file" not in request.FILES:
-    #         return Response(
-    #             {"error": "В запросе нет файла"}, status=status.HTTP_400_BAD_REQUEST
-    #         )
-    #     serializer = UploadSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         uploaded_file = serializer.validated_data["file"]
-    #         original_filename = uploaded_file.name
-    #         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    #         hash_file = self.calculate_md5(uploaded_file)
-    #
-    #         # Измените имя файла, добавив временную метку
-    #         new_file_name = f"{timestamp}_{uploaded_file.name}"
-    #         new_file = ContentFile(uploaded_file.read(), name=new_file_name)
-    #
-    #         # Создание экземпляра модели UploadedFile
-    #         uploaded_instance = Upload(
-    #             owner=request.user,  # Устанавливаем владельца на текущего пользователя
-    #             # original_filename=uploaded_file.name,
-    #             original_filename=original_filename,
-    #             # name=new_file_name,
-    #             hash_file=hash_file,
-    #             # file=new_file,  # файл будет сохранен автоматически
-    #             file=uploaded_file
-    #
-    #         )
-    #         uploaded_instance.save()
-    #         # телеграмм
-    #         # send_message(f"Загружен новый документ {original_filename} ")
-    #         send_email_to_admin.delay(f"Загружен файл {original_filename} ")
-    #
-    #         return Response(
-    #             {"original_name": uploaded_file.name, "new_name": new_file_name},
-    #             status=status.HTTP_201_CREATED,
-    #         )
-    #         # return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        if "file" not in request.FILES:
+            return Response(
+                {"error": "В запросе нет файла"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        serializer = UploadSerializer(data=request.data)
+        if serializer.is_valid():
+            uploaded_file = serializer.validated_data["file"]
+            original_filename = uploaded_file.name
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            hash_file = self.calculate_md5(uploaded_file)
+
+            # Измените имя файла, добавив временную метку
+            new_file_name = f"{timestamp}_{uploaded_file.name}"
+            new_file = ContentFile(uploaded_file.read(), name=new_file_name)
+
+            # Создание экземпляра модели UploadedFile
+            uploaded_instance = Upload(
+                owner=request.user,  # Устанавливаем владельца на текущего пользователя
+                # original_filename=uploaded_file.name,
+                original_filename=original_filename,
+                # name=new_file_name,
+                hash_file=hash_file,
+                # file=new_file,  # файл будет сохранен автоматически
+                file=uploaded_file
+
+            )
+            uploaded_instance.save()
+            # телеграмм
+            # send_message(f"Загружен новый документ {original_filename} ")
+            send_email_to_admin.delay(f"Загружен файл {original_filename} ")
+
+            return Response(
+                {"original_name": uploaded_file.name, "new_name": new_file_name},
+                status=status.HTTP_201_CREATED,
+            )
+            # return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def calculate_md5(self, file):
         """Вычисляет MD5-хэш для файла."""
