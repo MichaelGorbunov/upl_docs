@@ -106,7 +106,7 @@ class DocsCreateAPIView(CreateAPIView):
             send_email_to_admin.delay(f"Загружен файл {original_filename} ")
 
             return Response(
-                {"original_name": uploaded_file.name, "new_name": new_file_name},
+                {"original_name": original_filename, "new_name": uploaded_file.name},
                 status=status.HTTP_201_CREATED,
             )
             # return Response(serializer.data, status=status.HTTP_201_CREATED)
