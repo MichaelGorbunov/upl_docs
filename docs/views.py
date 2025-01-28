@@ -70,7 +70,9 @@ class DocsCreateAPIView(CreateAPIView):
                 original_filename=original_filename,
                 # name=new_file_name,
                 hash_file=hash_file,
-                file=new_file,  # файл будет сохранен автоматически
+                # file=new_file,  # файл будет сохранен автоматически
+                file=uploaded_file
+
             )
             uploaded_instance.save()
             # телеграмм
