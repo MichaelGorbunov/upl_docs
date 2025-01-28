@@ -1,9 +1,9 @@
 # from django.shortcuts import render
 import hashlib
-import os
+# import os
 from datetime import datetime
 
-from django.core.files.base import ContentFile
+# from django.core.files.base import ContentFile
 from django.http import Http404, HttpResponse
 from rest_framework import status
 from rest_framework.generics import (
@@ -47,7 +47,8 @@ class DocsCreateAPIView(CreateAPIView):
     serializer_class = UploadSerializer
     queryset = Upload.objects.all()
     permission_classes = [IsAuthenticated]
-# тоже не работает
+
+    # тоже не работает
     # def perform_create(self, serializer):
     #     # Получаем загруженный файл
     #     uploaded_file = self.request.FILES['uploaded_file']
@@ -71,7 +72,7 @@ class DocsCreateAPIView(CreateAPIView):
     #         file=new_file_name,
     #         hash_file=hash_file
     #     )
-# пустые файлы
+    # пустые файлы
     def post(self, request):
         if "file" not in request.FILES:
             return Response(
@@ -85,8 +86,8 @@ class DocsCreateAPIView(CreateAPIView):
             hash_file = self.calculate_md5(uploaded_file)
 
             # Измените имя файла, добавив временную метку
-            new_file_name = f"{timestamp}_{uploaded_file.name}"
-            new_file = ContentFile(uploaded_file.read(), name=new_file_name)
+            # new_file_name = f"{timestamp}_{uploaded_file.name}"
+            # new_file = ContentFile(uploaded_file.read(), name=new_file_name)
             uploaded_file.name = f"{timestamp}_{uploaded_file.name}"
 
             # Создание экземпляра модели UploadedFile
@@ -151,4 +152,3 @@ class FileDownloadView(APIView):
         # response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
         response["Content-Disposition"] = f'attachment; filename="{original_filename}"'
         return response
-

@@ -85,7 +85,7 @@ jobs:
           POSTGRES_PASSWORD: some_password
         run:
           coverage run --source='.' manage.py test && coverage report
-         
+
 
   deploy:
     runs-on: ubuntu-latest

@@ -6,16 +6,16 @@ from docs.models import Upload
 from .validators import validate_file_size, validate_file_type
 
 
-class DocsSerializer(ModelSerializer):
-    """Сериализатор для документа"""
-
-    # def update(self, instance):
-    #     send_message()
-    #     return instance
-    class Meta:
-        model = Upload
-        fields = "__all__"
-        read_only_fields = ["owner", "original_filename", "hash_file"]
+# class DocsSerializer(ModelSerializer):
+#     """Сериализатор для документа"""
+#
+#     # def update(self, instance):
+#     #     send_message()
+#     #     return instance
+#     class Meta:
+#         model = Upload
+#         fields = "__all__"
+#         read_only_fields = ["owner", "original_filename", "hash_file"]
 
 
 class UploadSerializer(ModelSerializer):
