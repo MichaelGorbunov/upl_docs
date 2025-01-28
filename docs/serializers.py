@@ -24,8 +24,8 @@ class UploadSerializer(ModelSerializer):
         fields = "__all__"  # Укажите все нужные поля
         read_only_fields = ["owner", "original_filename", "hash_file"]
 
-    def validate_file(self, value):
-        """Проверяем файл перед сохранением."""
-        validate_file_type(value)  # Вызываем валидатор для типа файла
-        validate_file_size(value)  # Вызываем валидатор для размера файла
-        return value
+    # def validate_file(self, value):
+    #     """Проверяем файл перед сохранением."""
+    #     validate_file_type(value)  # Вызываем валидатор для типа файла
+    #     validate_file_size(value)  # Вызываем валидатор для размера файла
+    #     return value

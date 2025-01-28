@@ -68,7 +68,7 @@ class DocsCreateAPIView(CreateAPIView):
         serializer.save(
             owner=self.request.user,
             original_file_name=original_file_name,
-            uploaded_file=new_file_name,
+            file=new_file_name,
             hash_file=hash_file
         )
 # пустые файлы
