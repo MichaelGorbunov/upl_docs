@@ -70,7 +70,7 @@ class DocsCreateAPIView(CreateAPIView):
     #         original_file_name=original_file_name,
     #         file=new_file_name,
     #         hash_file=hash_file
-        )
+    #     )
 # пустые файлы
     def post(self, request):
         if "file" not in request.FILES:
@@ -150,3 +150,4 @@ class FileDownloadView(APIView):
         # response['Content-Disposition'] = f'attachment; filename="{file_instance.file.name}"'
         response["Content-Disposition"] = f'attachment; filename="{original_filename}"'
         return response
+
