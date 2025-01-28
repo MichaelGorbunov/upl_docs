@@ -3,7 +3,7 @@ name: DOCS_SRV CI/CD Pipeline
 on: [push, pull_request]
 #on: [ push ]
 
-#jobs:
+jobs:
 #
 #  lint:
 #    runs-on: ubuntu-latest
