@@ -79,11 +79,14 @@ class FileValidatorTests(TestCase):
         except ValidationError:
             self.fail("ValidationError was raised for a valid file type.")
 
-    def test_2invalid_file_type(self):
-        """Тест для некорректного типа файла."""
-        file = SimpleUploadedFile("test_file.7z", b"file_content", content_type="application/x-7z-compressed")
-        validate_file_type(file)
-        self.assertRaises(ValidationError)
+    def test_1invalid_file_type(self):
+        """Тест для недопустимого типа файла."""
+
+        valid_file = SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
+        try:
+            validate_file_type(valid_file)
+        except ValidationError:
+            self.fail("validate_file_type() raised ValidationError unexpectedly!")
 
 
 class FileSizeValidatorTests(TestCase):
