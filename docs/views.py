@@ -87,6 +87,7 @@ class DocsCreateAPIView(CreateAPIView):
             # Измените имя файла, добавив временную метку
             new_file_name = f"{timestamp}_{uploaded_file.name}"
             new_file = ContentFile(uploaded_file.read(), name=new_file_name)
+            uploaded_file.name = f"{timestamp}_{uploaded_file.name}"
 
             # Создание экземпляра модели UploadedFile
             uploaded_instance = Upload(
