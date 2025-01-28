@@ -1,7 +1,7 @@
 name: DOCS_SRV CI/CD Pipeline
 
-on: [push, pull_request]
-#on: [ push ]
+#on: [push, pull_request]
+on: [ push ]
 
 jobs:
 #
