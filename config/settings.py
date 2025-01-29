@@ -33,7 +33,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = False
 
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['s120601.foxcdn.net', ]
+ALLOWED_HOSTS = ['s120601.foxcdn.net', '185.92.73.149']
 # ALLOWED_HOSTS = ['web', 'localhost', ]
 # ALLOWED_HOSTS = ['app', 'nginx', ]
 # Application definition
