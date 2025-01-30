@@ -1,12 +1,11 @@
-from unittest import TestCase
-
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
 from rest_framework import status
-from rest_framework.test import APIRequestFactory, APITestCase
 from rest_framework.exceptions import ValidationError
+from rest_framework.test import APIRequestFactory, APITestCase
 
 from docs.models import Upload
-from docs.validators import validate_file_type, validate_file_size
+from docs.validators import validate_file_size, validate_file_type
 from users.models import CustomUser
 
 
@@ -73,7 +72,9 @@ class FileValidatorTests(TestCase):
 
     def test_1valid_file_type(self):
         """Тест для корректного типа файла."""
-        file = SimpleUploadedFile("test_image.jpeg", b"file_content", content_type="image/jpeg")
+        file = SimpleUploadedFile(
+            "test_image.jpeg", b"file_content", content_type="image/jpeg"
+        )
         try:
             validate_file_type(file)
         except ValidationError:
@@ -82,7 +83,9 @@ class FileValidatorTests(TestCase):
     def test_1invalid_file_type(self):
         """Тест для недопустимого типа файла."""
 
-        valid_file = SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
+        valid_file = SimpleUploadedFile(
+            "test_image.jpg", b"file_content", content_type="image/jpeg"
+        )
         try:
             validate_file_type(valid_file)
         except ValidationError:
@@ -92,7 +95,9 @@ class FileValidatorTests(TestCase):
 class FileSizeValidatorTests(TestCase):
     def test_1valid_file_size(self):
         """Тест для корректного размера файла."""
-        file = SimpleUploadedFile("test_image.jpeg", b"file_content", content_type="image/jpeg")
+        file = SimpleUploadedFile(
+            "test_image.jpeg", b"file_content", content_type="image/jpeg"
+        )
         file.size = 4 * 1024 * 1024  # 4 MB
         try:
             validate_file_size(file)
@@ -101,6 +106,8 @@ class FileSizeValidatorTests(TestCase):
 
     def test_2invalid_file_size(self):
         """Тест для некорректного размера файла."""
-        file = SimpleUploadedFile("test_file.jpeg", b"file_content", content_type="image/jpeg")
+        file = SimpleUploadedFile(
+            "test_file.jpeg", b"file_content", content_type="image/jpeg"
+        )
         file.size = 6 * 1024 * 1024  # 6 MB, больше максимального разрешенного размера
         self.assertRaises(ValidationError)

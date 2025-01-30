@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from docs.models import Upload
 from docs.tasks import send_email_to_user
 
@@ -14,9 +15,7 @@ def rejected_docs(modeladmin, request, queryset):
     count = 0
     queryset.update(state_file=0)
     for obj in queryset:
-        send_notification(
-            obj
-        )  # Вызов метода send_notification из класса DocsAdmin
+        send_notification(obj)  # Вызов метода send_notification из класса DocsAdmin
         count += 1
     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
 
@@ -26,9 +25,7 @@ def adopted_docs(modeladmin, request, queryset):
     count = 0
     queryset.update(state_file=1)
     for obj in queryset:
-        send_notification(
-            obj
-        )  # Вызов метода send_notification из класса DocsAdmin
+        send_notification(obj)  # Вызов метода send_notification из класса DocsAdmin
         count += 1
     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 
@@ -45,12 +42,16 @@ class DocsAdmin(admin.ModelAdmin):
 def send_notification(obj):
     email_owner = obj.owner.email
     original_filename = obj.original_filename
-    message_from_user = (f"Уважаемый {email_owner}. Изменен документ {original_filename}."
-                         f" Его статус: {obj.get_state_file_display()} ")
+    message_from_user = (
+        f"Уважаемый {email_owner}. Изменен документ {original_filename}."
+        f" Его статус: {obj.get_state_file_display()} "
+    )
 
     try:
         send_email_to_user.delay(message_from_user, email_owner)
     except Exception as e:
         # Обработка ошибки
-        print(f"Ошибка при отправке уведомления для {original_filename} ({email_owner}): {str(e)}")
+        print(
+            f"Ошибка при отправке уведомления для {original_filename} ({email_owner}): {str(e)}"
+        )
         raise

@@ -33,7 +33,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = False
 
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['s120601.foxcdn.net', '185.92.73.149']
+ALLOWED_HOSTS = ["s120601.foxcdn.net", "185.92.73.149"]
 # ALLOWED_HOSTS = ['web', 'localhost', ]
 # ALLOWED_HOSTS = ['app', 'nginx', ]
 # Application definition
@@ -138,7 +138,7 @@ USE_TZ = True
 ENV_TYPE = os.getenv("ENV_TYPE")
 
 STATIC_URL = "static/"
-if ENV_TYPE == 'local':
+if ENV_TYPE == "local":
 
     STATICFILES_DIRS = [
         # Здесь вы можете добавить пути к вашим статическим файлам,
@@ -147,7 +147,7 @@ if ENV_TYPE == 'local':
         / "static"
     ]
 else:
-    STATIC_ROOT = BASE_DIR / 'static'
+    STATIC_ROOT = BASE_DIR / "static"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
@@ -184,7 +184,7 @@ EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_SSL = True
 # # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # #выводим в консоль
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # на почту
 # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "mail")

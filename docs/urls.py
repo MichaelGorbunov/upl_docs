@@ -1,12 +1,8 @@
 from django.urls import path
 
 from docs.apps import DocsConfig
-from docs.views import (
-    DocsCreateAPIView,
-    DocsDestroyAPIView,
-    DocsListAPIView,
-    FileDownloadView,
-)
+from docs.views import (DocsCreateAPIView, DocsDestroyAPIView, DocsListAPIView,
+                        FileDownloadView)
 
 app_name = DocsConfig.name
 
