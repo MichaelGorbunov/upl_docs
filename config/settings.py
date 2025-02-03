@@ -191,12 +191,14 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, "mail")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",  # Замените на адрес вашего фронтенд-сервера
+    # "http://localhost:8000",  # Замените на адрес вашего фронтенд-сервера
+    "http://s120601.foxcdn.net:80",
+    "http://185.92.73.149:80",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://read-and-write.example.com",  # Замените на адрес вашего фронтенд-сервера
-    "http://localhost:8000",  # и добавьте адрес бэкенд-сервера
+    # "https://read-and-write.example.com",  # Замените на адрес вашего фронтенд-сервера
+    # "http://localhost:8765",  # и добавьте адрес бэкенд-сервера
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
