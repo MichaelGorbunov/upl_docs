@@ -61,7 +61,6 @@ class UploadSerializer(ModelSerializer):
             hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
-
 # class UploadSerializer(ModelSerializer):
 #     class Meta:
 #         model = Upload
