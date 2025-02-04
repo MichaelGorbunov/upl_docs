@@ -78,7 +78,6 @@ class FileUploadTest(APITestCase):
         # Проверьте статус ответа
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-
     def test_6file_list(self):
         """Тест скачивания не владельцем"""
 
