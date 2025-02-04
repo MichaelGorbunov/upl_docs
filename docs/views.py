@@ -63,7 +63,7 @@ class DocsDestroyAPIView(DestroyAPIView):
     """Контроллер удаления одного документа"""
 
     serializer_class = DocsSerializer
-    queryset = Upload.objects.all()
+    # queryset = Upload.objects.all()
     # permission_classes = [IsAuthenticated,]
     permission_classes = [IsOwner]
 
@@ -72,19 +72,9 @@ class FileDownloadView(APIView):
     """Контроллер скачивания документа"""
 
     permission_classes = [IsOwnerOrSuperUser]
+    serializer_class = DocsSerializer
+    queryset = Upload.objects.all()
 
-    # serializer_class = DocsSerializer
-    # queryset = Upload.objects.all()
-    def get_queryset(self):
-        # Получите пользователя из запроса
-        user = self.request.user
-
-        # Если пользователь суперпользователь, возвращаем все документы
-        if user.is_superuser:
-            return Upload.objects.all()
-
-        # В противном случае, возвращаем только документы владельца
-        return Upload.objects.filter(owner=user)
 
     def get(self, request, *args, **kwargs):
         try:
