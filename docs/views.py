@@ -4,6 +4,7 @@
 # from datetime import datetime
 
 # from django.core.files.base import ContentFile
+from rest_framework.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView
@@ -81,6 +82,9 @@ class FileDownloadView(APIView):
             file_instance = Upload.objects.get(pk=kwargs["pk"])
         except Upload.DoesNotExist:
             raise Http404("File not found")
+
+        if not self.request.user.is_superuser and file_instance.owner != self.request.user:
+            raise PermissionDenied("You do not have permission to download this file.")
 
         # Используем оригинальное имя файла для скачивания
         original_filename = file_instance.original_filename or file_instance.file.name
