@@ -57,15 +57,38 @@ class FileUploadTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_4file_list(self):
+        """Тест скачиания владельцем"""
+
+        self.client.force_authenticate(user=self.user)  # Аутентификация пользователя
+
+        # Отправьте POST-запрос к вашему API с файлом
+        response = self.client.get("/docs/download/3/")
+
+        # Проверьте статус ответа
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_5file_list(self):
         """Тест удаления владельцем"""
 
         self.client.force_authenticate(user=self.user)  # Аутентификация пользователя
 
         # Отправьте POST-запрос к вашему API с файлом
-        response = self.client.delete("/docs/delete/3/")
+        response = self.client.delete("/docs/delete/4/")
 
         # Проверьте статус ответа
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+
+    def test_6file_list(self):
+        """Тест скачивания не владельцем"""
+
+        self.client.force_authenticate(user=self.other_user)  # Аутентификация пользователя
+
+        # Отправьте POST-запрос к вашему API с файлом
+        response = self.client.get("/docs/download/5/")
+
+        # Проверьте статус ответа
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class FileValidatorTests(TestCase):
