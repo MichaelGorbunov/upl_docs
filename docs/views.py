@@ -75,7 +75,6 @@ class FileDownloadView(APIView):
     serializer_class = DocsSerializer
     queryset = Upload.objects.all()
 
-
     def get(self, request, *args, **kwargs):
         try:
             # Получаем объект файла
