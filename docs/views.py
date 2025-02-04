@@ -72,6 +72,7 @@ class FileDownloadView(APIView):
     """Контроллер скачивания документа"""
 
     permission_classes = [IsOwnerOrSuperUser]
+
     # serializer_class = DocsSerializer
     # queryset = Upload.objects.all()
     def get_queryset(self):
