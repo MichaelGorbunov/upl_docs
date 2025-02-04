@@ -71,7 +71,9 @@ class DocsDestroyAPIView(DestroyAPIView):
 class FileDownloadView(APIView):
     """Контроллер скачивания документа"""
 
-    permission_classes = [IsOwnerOrSuperUser]
+    permission_classes = [IsOwner]
+    serializer_class = DocsSerializer
+    queryset = Upload.objects.all()
 
     def get(self, request, *args, **kwargs):
         try:
