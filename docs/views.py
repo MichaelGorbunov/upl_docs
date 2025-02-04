@@ -23,7 +23,7 @@ class DocsListAPIView(ListAPIView):
 
     # queryset = Upload.objects.all()
     serializer_class = DocsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerOrSuperUser]
 
     def get_queryset(self):
         # Получите пользователя из запроса
