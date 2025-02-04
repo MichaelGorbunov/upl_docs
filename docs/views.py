@@ -73,7 +73,7 @@ class FileDownloadView(APIView):
 
     permission_classes = [IsOwner]
     serializer_class = DocsSerializer
-    queryset = Upload.objects.all()
+    # queryset = Upload.objects.all()
 
     def get(self, request, *args, **kwargs):
         try:
