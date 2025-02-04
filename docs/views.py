@@ -63,7 +63,7 @@ class DocsDestroyAPIView(DestroyAPIView):
     """Контроллер удаления одного документа"""
 
     serializer_class = DocsSerializer
-    # queryset = Upload.objects.all()
+    queryset = Upload.objects.all()
     # permission_classes = [IsAuthenticated,]
     permission_classes = [IsOwner]
 
