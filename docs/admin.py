@@ -17,6 +17,7 @@ def rejected_docs(modeladmin, request, queryset):
         send_notification(obj)
     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
 
+
 @admin.action(description="Принять документы")
 def adopted_docs(modeladmin, request, queryset):
     count = queryset.update(state_file=1)
