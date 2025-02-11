@@ -12,21 +12,16 @@ admin.site.disable_action("delete_selected")
 
 @admin.action(description="Отклонить документы")
 def rejected_docs(modeladmin, request, queryset):
-    count = 0
-    queryset.update(state_file=0)
+    count = queryset.update(state_file=0)
     for obj in queryset:
-        send_notification(obj)  # Вызов метода send_notification из класса DocsAdmin
-        count += 1
+        send_notification(obj)
     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
-
 
 @admin.action(description="Принять документы")
 def adopted_docs(modeladmin, request, queryset):
-    count = 0
-    queryset.update(state_file=1)
+    count = queryset.update(state_file=1)
     for obj in queryset:
-        send_notification(obj)  # Вызов метода send_notification из класса DocsAdmin
-        count += 1
+        send_notification(obj)
     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 
 
