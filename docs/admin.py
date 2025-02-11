@@ -19,10 +19,18 @@ def rejected_docs(modeladmin, request, queryset):
 
 
 @admin.action(description="Принять документы")
+# def adopted_docs(modeladmin, request, queryset):
+#     count = queryset.update(state_file=1)
+#     for obj in queryset:
+#         send_notification(obj)
+#     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 def adopted_docs(modeladmin, request, queryset):
-    count = queryset.update(state_file=1)
-    for obj in queryset:
+    count = 0
+    updated_queryset = queryset.filter(state_file__in=[None, 0])  # Пример условия
+    # updated_count = updated_queryset.update(state_file=1)
+    for obj in updated_queryset:
         send_notification(obj)
+        count += 1
     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 
 
