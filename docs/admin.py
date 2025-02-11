@@ -13,8 +13,10 @@ admin.site.disable_action("delete_selected")
 @admin.action(description="Отклонить документы")
 def rejected_docs(modeladmin, request, queryset):
     count = 0
-    queryset.update(state_file=0)
+    # queryset.update(state_file=0)
     for obj in queryset:
+        obj.state_file = 0
+        obj.save()
         send_notification(obj)
         count += 1
     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
