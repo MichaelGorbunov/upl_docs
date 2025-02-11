@@ -15,10 +15,11 @@ def rejected_docs(modeladmin, request, queryset):
     count = 0
     # queryset.update(state_file=0)
     for obj in queryset:
-        obj.state_file = 0
-        obj.save()
-        send_notification(obj)
-        count += 1
+        if obj.state_file != 0:
+            obj.state_file = 0
+            obj.save()
+            send_notification(obj)
+            count += 1
     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
 
 
@@ -27,10 +28,11 @@ def adopted_docs(modeladmin, request, queryset):
     count = 0
     # queryset.update(state_file=1)
     for obj in queryset:
-        obj.state_file = 1
-        obj.save()
-        send_notification(obj)
-        count += 1
+        if obj.state_file != 1:
+            obj.state_file = 1
+            obj.save()
+            send_notification(obj)
+            count += 1
     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 
 
