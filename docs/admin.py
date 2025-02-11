@@ -11,32 +11,22 @@ admin.site.disable_action("delete_selected")
 
 
 @admin.action(description="Отклонить документы")
-# def rejected_docs(modeladmin, request, queryset):
-#     count = queryset.update(state_file=0)
-#     for obj in queryset:
-#         send_notification(obj)
-#     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
 def rejected_docs(modeladmin, request, queryset):
-    count = queryset.update(state_file=0)
-    # Перезагрузка объектов из базы данных
-    updated_objects = queryset.model.objects.filter(pk__in=queryset.values_list('pk', flat=True))
-    for obj in updated_objects:
+    count = 0
+    queryset.update(state_file=0)
+    for obj in queryset:
         send_notification(obj)
+        count += 1
     modeladmin.message_user(request, f"Отклонено {count} записи(ей).")
 
 
 @admin.action(description="Принять документы")
-# def adopted_docs(modeladmin, request, queryset):
-#     count = queryset.update(state_file=1)
-#     for obj in queryset:
-#         send_notification(obj)
-#     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 def adopted_docs(modeladmin, request, queryset):
-    count = queryset.update(state_file=1)
-    # Перезагрузка объектов из базы данных
-    updated_objects = queryset.model.objects.filter(pk__in=queryset.values_list('pk', flat=True))
-    for obj in updated_objects:
+    count = 0
+    queryset.update(state_file=1)
+    for obj in queryset:
         send_notification(obj)
+        count += 1
     modeladmin.message_user(request, f"Принято {count} записи(ей).")
 
 
